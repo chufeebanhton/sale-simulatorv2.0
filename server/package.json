@@ -1,0 +1,26 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "npx tsx watch src/index.ts",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc",
+    "start": "node dist/server.js"
+  },
+  "devDependencies": {
+    "@types/busboy": "^1.5.5",
+    "@types/node": "^26.6.5",
+    "@types/pg": "^8.23.1"
+  },
+  "dependencies": {
+    "busboy": "^1.6.0",
+    "file-type": "^22.2.0",
+    "pg": "^8.23.1"
+  }
+}

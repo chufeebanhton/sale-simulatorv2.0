@@ -1,0 +1,35 @@
+{
+  "name": "sale-simulator",
+  "version": "1.0.0",
+  "description": "# Sales Simulator — Distributed Traffic Management System",
+  "keywords": [
+    "HTML",
+    "CSS",
+    "TS",
+    "MOCK-API",
+    "NODE:HTTP"
+  ],
+  "homepage": "https://github.com/chufeebanhton/sale-simulator#readme",
+  "bugs": {
+    "url": "https://github.com/chufeebanhton/sale-simulator/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chufeebanhton/sale-simulator.git"
+  },
+  "license": "ISC",
+  "author": "chufeebanhton",
+  "type": "module",
+  "main": "The project aims to explore how a web application can be designed to accommodate **10,000–30,000 concurrent users**, while measuring request throughput, response latency, error rates, resource utilization, and the impact of external API limitations.",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npm run build:client && npm run build:server",
+    "build:client": "tsc -p client/tsconfig.json",
+    "build:server": "tsc -p server/tsconfig.json",
+    "start": "npm run build && npm run start:server",
+    "start:server": "node server/dist/index.js"
+  },
+  "devDependencies": {
+    "autocannon": "^8.0.0"
+  }
+}
