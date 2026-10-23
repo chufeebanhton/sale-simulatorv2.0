@@ -1,12 +1,12 @@
 import { createServer } from "node:http";
-// import { router } from "./router/router.js";
-import { healthRoute } from "./router/health.router.js";
+import { product_router } from "./routers/product.router.js";
+import { healthRoute } from "./routers/health.router.js";
 
 const PORT = 3000;
 
 const server = createServer((req, res) => {
-//   router(req, res);
-    healthRoute(req, res);
+    product_router(req, res);
+    // healthRoute(req, res);
 });
 
 server.listen(PORT, () => {

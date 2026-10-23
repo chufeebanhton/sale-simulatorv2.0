@@ -14,7 +14,7 @@ export function healthRoute(req: IncomingMessage, res: ServerResponse): void {
     res.end(
         JSON.stringify({
             status: "ok",
-            service: "sale-simulator/v2.0",
+            service: "sale-simulator/v2.0.0",
         }),
     );
 }
