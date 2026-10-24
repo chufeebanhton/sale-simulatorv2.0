@@ -1,8 +1,8 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
-import { Scheduler } from "../Scheduler/Scheduler.js";
+import { Scheduler } from "../Engines/Scheduler/Scheduler.js";
 import { GET } from "../services/mockAPI/product.services.js";
 import type { Product } from "../interfaces/Product.types.js";
-import { ProductCache } from "../Storage/Storage.js";
+import { ProductCache } from "../Engines/Storage/Storage.js";
 import { sendResponse } from "../services/response/product.response.js";
 
 const scheduler = new Scheduler(100, 1000);
@@ -25,7 +25,7 @@ export const product_router = async (
         if (req.method === "GET" && pathname === "/api/v2.0.0/products") {
             const page = Number(url.searchParams.get("page") ?? 1);
             const limit = Number(url.searchParams.get("limit") ?? 9);
-            if (!productCache.isExis()) {
+            if (!productCache.isExist()) {
                 const products = await scheduler.submit<Product[]>(() => GET());
                 productCache.callBack(products);
             }

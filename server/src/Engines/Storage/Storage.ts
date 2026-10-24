@@ -1,4 +1,4 @@
-import { Product } from "../interfaces/Product.types.js";
+import { Product } from "../../interfaces/Product.types.js";
 
 export class ProductCache {
     private cache = new Map<string[], Product>();
@@ -8,7 +8,7 @@ export class ProductCache {
         this.callBack(data);    
     };
 
-    isExis(): Boolean {
+    isExist(): Boolean {
         return this.exis;
     };
 
@@ -43,6 +43,3 @@ export class ProductCache {
         });
     }
 }
-
-const productCache = new Map<string, Product>();
-

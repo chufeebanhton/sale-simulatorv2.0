@@ -1,4 +1,4 @@
-import { CircleQueue } from "../Classes/CircleQueue.class.js";
+import { CircleQueue } from "../../classes/CircleQueue.class.js";
 import { ConcurrencyLimiter } from "./ConcurrencyLimiter.scheduler.js";
 
 interface QueueTask {
