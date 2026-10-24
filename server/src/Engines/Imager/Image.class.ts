@@ -1,28 +1,24 @@
 import sharp, { type Metadata } from "sharp";
-
-interface sizeNeed {
-    w: 800 | 600,
-    h: 800 | 600
-}
+import { BufferData } from "./Imager.js";
 
 export class Image {
-    constructor(private buffer: Buffer, private readonly sizeNeed: sizeNeed){
-        if (!Buffer.isBuffer(buffer)) {
+    constructor(private data: BufferData){
+        if (!Buffer.isBuffer(data.buffer)) {
             throw new TypeError("Image input must be a Buffer");
         }
 
-        if (buffer.length === 0) {
+        if (data.buffer.length === 0) {
             throw new Error("Image buffer is empty");
         }
     }
     async metaData(buffer: Buffer | undefined = undefined): Promise<Metadata> {
-        buffer = !buffer ? this.buffer : buffer;
+        buffer = !buffer ? this.data.buffer : buffer;
         return sharp(buffer).metadata();
     }
 
     async toWebp(): Promise<Buffer> {
-        const output = await sharp(this.buffer)
-            .resize(this.sizeNeed.w, this.sizeNeed.h, {
+        const output = await sharp(this.data.buffer)
+            .resize(this.data.sizeNeed.w, this.data.sizeNeed.h, {
                 fit: "cover",
                 position: "centre",
             })
@@ -32,6 +28,6 @@ export class Image {
     }
 
     root(): Buffer {
-        return this.buffer;
+        return this.data.buffer;
     }
 }
