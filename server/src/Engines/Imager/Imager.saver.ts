@@ -1,6 +1,6 @@
-import { Image } from "./Image.class.js"; // Image property
-import { ImageValidator } from "./Imager.validator.js";
-import { ImageStorage } from "./Imager.storage.js";
+import { Image } from "./Gears.saver/Imager.class.js"; // Image property
+import { ImageValidator } from "./Gears.saver/Imager.validator.js";
+import { ImageStorage } from "./Gears.saver/Imager.storage.js";
 
 export interface BufferData {
     buffer: Buffer,

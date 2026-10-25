@@ -3,7 +3,7 @@ import { Scheduler } from "../Engines/Scheduler/Scheduler.js";
 import { GET } from "../services/mockAPI/product.services.js";
 import type { Product } from "../interfaces/Product.types.js";
 import { ProductCache } from "../Engines/Storage/Storage.js";
-import { sendResponse } from "../services/response/product.response.js";
+import { sendResponse } from "../services/responser/product.response.js";
 
 const scheduler = new Scheduler(100, 1000);
 const productCache = new ProductCache(

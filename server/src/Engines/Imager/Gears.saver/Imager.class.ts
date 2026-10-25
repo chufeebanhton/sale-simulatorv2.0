@@ -1,5 +1,5 @@
 import sharp, { type Metadata } from "sharp";
-import { BufferData } from "./Imager.js";
+import { BufferData } from "../Imager.saver.js";
 
 export class Image {
     constructor(private data: BufferData){
