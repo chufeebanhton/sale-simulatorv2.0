@@ -1,6 +1,6 @@
-import { Image } from "../Gears.saver/Imager.class.js"; // Image property
-import { ImageValidator } from "../Gears.saver/Imager.validator.js";
-import { ImageStorage } from "../Gears.saver/Imager.storage.js";
+import { Image } from "../Gears/Imager.processor.js"; // Image property
+import { ImageValidator } from "../Gears/Imager.validator.js";
+import { ImageStorage } from "../Gears/Imager.methods.js";
 import { readFile } from "node:fs/promises";
 
 export interface BufferData {
