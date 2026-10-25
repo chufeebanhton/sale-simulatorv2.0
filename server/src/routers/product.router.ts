@@ -10,10 +10,10 @@ const productCache = new ProductCache(
     await scheduler.submit<Product[]>(() => GET())
 );
 
-export const product_router = async (
+export async function product_router(
     req: IncomingMessage,
     res: ServerResponse
-): Promise<void> => {
+): Promise<void> {
     const url = new URL(
         req.url ?? "/",
         `http://${req.headers.host ?? "localhost"}`

@@ -42,6 +42,6 @@ const flow = await ImageFlower({
         w: 800,
         h: 800
     }
-}, "../../../uploads/images/products/indexs")
+}, "../../../../uploads/images/products/indexs")
 
 console.log(flow)

@@ -20,7 +20,17 @@ export class ImageDelivery {
         if (resolve(filePath, "..") !== rootPath) {
             throw new Error("Invalid image path");
         }
-
+        console.log("Resolved path:", filePath);
         return createReadStream(filePath);
     }
 }
+
+/*
+Lỗi xảy ra ở đâu?	                             Kết quả xử lý
+Method không phải GET	                             405
+URL sai định dạng	                                 400
+File không tồn tại, chưa gửi header	                 404
+Lỗi đọc file trước khi gửi header	       Thường là 500
+Lỗi sau khi đã gửi 200	                   Không thể đổi status; kết thúc hoặc hủy response
+Client ngắt kết nối	                       Dừng stream, giải phóng slot và không nhất thiết xem là lỗi server
+*/
