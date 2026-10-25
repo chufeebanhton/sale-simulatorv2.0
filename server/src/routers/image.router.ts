@@ -50,7 +50,6 @@ export async function imageRouter(
 
     try {
         await scheduler.submit(async () => {
-            console.log("Requested filename:", match[1]);
             const stream = delivery.read(match[1]);
             try {
                 await once(stream, "open");

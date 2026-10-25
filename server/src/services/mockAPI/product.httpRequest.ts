@@ -1,9 +1,11 @@
+import { Product } from "../../interfaces/Product.types.js";
+
 type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
 export async function httpRequest<T>(
     url: string,
     method: HttpMethod = "GET",
-    body?: unknown
+    body?: Product | Partial<Product>
 ): Promise<T> {
     const response = await fetch(url, {
         method,

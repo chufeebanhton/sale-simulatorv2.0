@@ -1,17 +1,18 @@
 export interface Product {
-  id: string;
+  _id: string;
   sku: string;
   name: string;
   description: string;
-  categoryId: string[];
+  categoriesId: string[];
   brand: string;
   price: number;
   stockQuantity: number;
+  compareAtPrice: number;
   imageUrl: string;
   status: "active" | "inactive";
-  createdAt: number;
-  updatedAt: number;
+  createdAt: string;
+  updatedAt: string;
 }
 
-export type ProductInput = Omit<Product, "id" | "createdAt" | "updatedAt">;
+export type ProductInput = Omit<Product, "id" | "createdAt" | "updatedAt" | "status" | "imageUrl">;
 

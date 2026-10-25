@@ -1,8 +1,9 @@
-import { writeFile, mkdir, unlink } from "node:fs/promises";
+import { writeFile, mkdir, unlink, rename } from "node:fs/promises";
 import { randomUUID } from "node:crypto";
 import { join, resolve, basename } from "node:path";
 
-export class ImageStorage {
+export class ImageMethods {
+
     async delete(directory: string, fileName: string): Promise<void> {
         // Chỉ chấp nhận tên file do hệ thống tạo
         if (!/^[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}\.png$/i.test(fileName)) {
@@ -47,5 +48,28 @@ export class ImageStorage {
         await writeFile(filePath, buffer, { flag: "wx" });
 
         return fileName;
+        
+    }
+
+    async update(buffer: Buffer, imgPath: string): Promise<string> {
+        const tempPath = `${imgPath}.webp`;
+        try {
+            await unlink(imgPath);
+        } catch (error) {
+            if (
+                error instanceof Error &&
+                "code" in error &&
+                error.code === "ENOENT"
+            ) {
+                // File không tồn tại: không thể xóa
+                throw new Error(`Image not found: ${imgPath}`);
+            }
+
+            // EACCES, EPERM, EISDIR... được truyền lên caller
+            throw error;
+        }
+        await writeFile(tempPath, buffer);
+        await rename(tempPath, imgPath);
+        return imgPath;
     }
 }

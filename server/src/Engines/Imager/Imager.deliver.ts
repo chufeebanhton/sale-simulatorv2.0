@@ -20,7 +20,6 @@ export class ImageDelivery {
         if (resolve(filePath, "..") !== rootPath) {
             throw new Error("Invalid image path");
         }
-        console.log("Resolved path:", filePath);
         return createReadStream(filePath);
     }
 }

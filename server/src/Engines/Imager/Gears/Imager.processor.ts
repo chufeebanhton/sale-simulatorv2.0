@@ -1,7 +1,7 @@
 import sharp, { type Metadata } from "sharp";
-import { BufferData } from "../Imager.saver.js";
+import { BufferData } from "../Imager.js";
 
-export class Image {
+export class ImageProcessor {
     constructor(private data: BufferData){
         if (!Buffer.isBuffer(data.buffer)) {
             throw new TypeError("Image input must be a Buffer");

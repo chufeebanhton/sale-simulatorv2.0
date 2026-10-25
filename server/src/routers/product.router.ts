@@ -1,9 +1,11 @@
-import type { IncomingMessage, ServerResponse } from "node:http";
+import { type IncomingMessage, type ServerResponse } from "node:http";
 import { Scheduler } from "../Engines/Scheduler/Scheduler.js";
-import { GET } from "../services/mockAPI/product.services.js";
+import { GET, POST } from "../services/mockAPI/product.services.js";
 import type { Product } from "../interfaces/Product.types.js";
 import { ProductCache } from "../Engines/Storage/Storage.js";
 import { sendResponse } from "../services/responser/product.response.js";
+import { getBody } from "../services/untils/getBody.js";
+
 
 const scheduler = new Scheduler(100, 1000);
 const productCache = new ProductCache(
@@ -35,6 +37,16 @@ export async function product_router(
         }
 
         if ( req.method === "POST" && pathname === "/api/v2.0.0/products" ) {
+            try {
+                const productInput = await getBody(req);
+                const product = await scheduler.submit<Product>(() => POST(productInput));
+                const result = await productCache.post(product);
+                sendResponse(res, 200, "Products retrieved successfully", result);
+                console.log(result)
+            } catch (error) {
+                sendResponse(res, 400, "Post Error", );
+            }
+            
             return;
         }
 
