@@ -1,10 +1,17 @@
+import { ApiError } from "../../classes/ApiError.js";
 
 export class ConcurrencyLimiter {
     private activeCount = 0;
 
     constructor(private readonly maxConcurrency: number) {
-        if (!Number.isInteger(maxConcurrency) || maxConcurrency <= 0) {
-            throw new Error("maxConcurrency must be a positive integer");
+        if (
+            !Number.isInteger(maxConcurrency) ||
+            maxConcurrency <= 0
+        ) {
+            throw new ApiError(
+                "INVALID_CONCURRENCY_LIMIT",
+                "maxConcurrency must be a positive integer",
+            );
         }
     }
 
@@ -18,11 +25,11 @@ export class ConcurrencyLimiter {
         let released = false;
 
         return () => {
-            // Không cho phép giải phóng cùng một slot hai lần
+            // Không cho phép giải phóng cùng một slot hai lần.
             if (released) return;
 
             released = true;
-            --this.activeCount;
+            this.activeCount--;
         };
     }
 

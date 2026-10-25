@@ -1,7 +1,7 @@
+import type { Metadata } from "sharp";
+import { ApiError } from "../../../classes/ApiError.js";
 
-import { Metadata } from "sharp";
-
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
+const MAX_FILE_SIZE = 5 * 1024 * 1024;
 const MAX_WIDTH = 8000;
 const MAX_HEIGHT = 8000;
 const MAX_PIXELS = 20_000_000;
@@ -17,15 +17,24 @@ const ALLOWED_FORMATS = new Set([
 export class ImageValidator {
     validateBuffer(buffer: Buffer): asserts buffer is Buffer {
         if (!Buffer.isBuffer(buffer)) {
-            throw new Error("Image must be a Buffer");
+            throw new ApiError(
+                "INVALID_IMAGE",
+                "Image must be a Buffer",
+            );
         }
 
         if (buffer.length === 0) {
-            throw new Error("Image buffer is empty");
+            throw new ApiError(
+                "INVALID_IMAGE",
+                "Image buffer is empty",
+            );
         }
 
         if (buffer.length > MAX_FILE_SIZE) {
-            throw new Error("Image exceeds the 5 MB limit");
+            throw new ApiError(
+                "IMAGE_TOO_LARGE",
+                "Image exceeds the 5 MB limit",
+            );
         }
     }
 
@@ -42,7 +51,7 @@ export class ImageValidator {
                     return (
                         buffer.length >= 12 &&
                         signature.every(
-                            (byte, index) => buffer[index] === byte
+                            (byte, index) => buffer[index] === byte,
                         ) &&
                         buffer.toString("ascii", 8, 12) === "WEBP"
                     );
@@ -51,14 +60,17 @@ export class ImageValidator {
                 return (
                     buffer.length >= signature.length &&
                     signature.every(
-                        (byte, index) => buffer[index] === byte
+                        (byte, index) => buffer[index] === byte,
                     )
                 );
-            }
+            },
         );
 
         if (!matches) {
-            throw new Error("Unsupported or invalid image signature");
+            throw new ApiError(
+                "INVALID_IMAGE",
+                "Unsupported or invalid image signature",
+            );
         }
     }
 
@@ -66,50 +78,75 @@ export class ImageValidator {
         const { format, width, height, pages } = metadata;
 
         if (!format || !ALLOWED_FORMATS.has(format)) {
-            throw new Error("Unsupported image format");
-        }
-        
-        if (width < MIN_WIDTH || height < MIN_HEIGHT) {
-            throw new Error(
-                `Image dimensions must be at least ${MIN_WIDTH}x${MIN_HEIGHT}`
+            throw new ApiError(
+                "INVALID_IMAGE",
+                "Unsupported image format",
             );
         }
 
         if (
             !Number.isInteger(width) ||
             !Number.isInteger(height) ||
-            !width ||
-            !height ||
+            width === undefined ||
+            height === undefined ||
             width <= 0 ||
             height <= 0
         ) {
-            throw new Error("Invalid image dimensions");
+            throw new ApiError(
+                "INVALID_IMAGE",
+                "Invalid image dimensions",
+            );
+        }
+
+        if (width < MIN_WIDTH || height < MIN_HEIGHT) {
+            throw new ApiError(
+                "INVALID_IMAGE",
+                `Image dimensions must be at least ${MIN_WIDTH}x${MIN_HEIGHT}`,
+            );
         }
 
         if (width > MAX_WIDTH || height > MAX_HEIGHT) {
-            throw new Error("Image dimensions exceed the limit");
+            throw new ApiError(
+                "INVALID_IMAGE",
+                "Image dimensions exceed the limit",
+            );
         }
 
         if (width * height > MAX_PIXELS) {
-            throw new Error("Image exceeds the 20 megapixel limit");
+            throw new ApiError(
+                "INVALID_IMAGE",
+                "Image exceeds the 20 megapixel limit",
+            );
         }
 
         if (pages !== undefined && pages > 1) {
-            throw new Error("Animated or multi-page images are not allowed");
+            throw new ApiError(
+                "INVALID_IMAGE",
+                "Animated or multi-page images are not allowed",
+            );
         }
     }
 
     validateOutput(buffer: Buffer, metadata: Metadata): void {
         if (!Buffer.isBuffer(buffer) || buffer.length === 0) {
-            throw new Error("Processed image buffer is invalid");
+            throw new ApiError(
+                "IMAGE_PROCESSING_FAILED",
+                "Processed image buffer is invalid",
+            );
         }
 
         if (metadata.format !== "webp") {
-            throw new Error("Output image must be WebP");
+            throw new ApiError(
+                "IMAGE_PROCESSING_FAILED",
+                "Output image must be WebP",
+            );
         }
 
         if (metadata.width !== 800 || metadata.height !== 800) {
-            throw new Error("Output image must be 800x800");
+            throw new ApiError(
+                "IMAGE_PROCESSING_FAILED",
+                "Output image must be 800x800",
+            );
         }
     }
 }

@@ -27,5 +27,5 @@ imageServer.listen(IMAGE_PORT, () => {
 })
 
 healthCheck.listen(1200, () => {
-  console.log(`Health check at http://localhost:1200`);
+  console.log(`Health check at http://localhost:1200/`);
 })

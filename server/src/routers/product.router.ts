@@ -3,9 +3,8 @@ import { Scheduler } from "../Engines/Scheduler/Scheduler.js";
 import { GET, POST } from "../services/mockAPI/product.services.js";
 import type { Product } from "../interfaces/Product.types.js";
 import { ProductCache } from "../Engines/Storage/Storage.js";
-import { sendResponse } from "../services/responser/product.response.js";
-import { getBody } from "../services/untils/getBody.js";
-
+import { sendSuccess, sendError } from "../services/responser/responseHelper.js";
+import { ApiError } from "../classes/ApiError.js";
 
 const scheduler = new Scheduler(100, 1000);
 const productCache = new ProductCache(
@@ -20,71 +19,53 @@ export async function product_router(
         req.url ?? "/",
         `http://${req.headers.host ?? "localhost"}`
     );
-
     const pathname = url.pathname;
 
     try {
         if (req.method === "GET" && pathname === "/api/v2.0.0/products") {
             const page = Number(url.searchParams.get("page") ?? 1);
             const limit = Number(url.searchParams.get("limit") ?? 9);
+
+            if (!Number.isInteger(page) || page < 1) {
+                throw new ApiError("VALIDATION_FAILED", "page must be a positive integer");
+            }
+
+            if (!Number.isInteger(limit) || limit < 1) {
+                throw new ApiError("VALIDATION_FAILED", "limit must be a positive integer");
+            }
+
             if (!productCache.isExist()) {
                 const products = await scheduler.submit<Product[]>(() => GET());
+                // go to Storage
                 productCache.callBack(products);
             }
+
             const data = await productCache.get(page, limit);
-            sendResponse(res, 200, "Products retrieved successfully", data);
+            sendSuccess(res, 200, "Products retrieved successfully", data);
             return;
         }
 
-        if ( req.method === "POST" && pathname === "/api/v2.0.0/products" ) {
-            try {
-                const productInput = await getBody(req);
-                const product = await scheduler.submit<Product>(() => POST(productInput));
-                const result = await productCache.post(product);
-                sendResponse(res, 200, "Products retrieved successfully", result);
-                console.log(result)
-            } catch (error) {
-                sendResponse(res, 400, "Post Error", );
-            }
-            
+        if (req.method === "POST" && pathname === "/api/v2.0.0/products") {
+            const product = await scheduler.submit<Product>(() => POST(req));
+            // go to Storage
+            const result = await productCache.post(product);
+            sendSuccess(res, 200, "Products retrieved successfully", result);
             return;
         }
 
-        if (
-            req.method === "PATCH" &&
-            pathname === "/api/v2.0.0/products"
-        ) {
+        if (req.method === "PATCH" && pathname === "/api/v2.0.0/products") {
             return;
         }
 
-        if (
-            req.method === "DELETE" &&
-            pathname === "/api/v2.0.0/products"
-        ) {
+        if (req.method === "DELETE" && pathname === "/api/v2.0.0/products") {
             return;
         }
 
-        sendResponse(
-            res,
-            404,
-            "Route not found",
-            null,
-            { code: "ROUTE_NOT_FOUND" }
+        throw new ApiError(
+            "ROUTE_NOT_FOUND",
+            "Product route not found"
         );
     } catch (error: unknown) {
-        const message = error instanceof Error
-            ? error.message
-            : "Unknown error";
-
-        sendResponse(
-            res,
-            500,
-            "Failed to process product request",
-            null,
-            {
-                code: "PRODUCT_REQUEST_ERROR",
-                details: message
-            }
-        );
+        sendError(res, error);
     }
-};
+}

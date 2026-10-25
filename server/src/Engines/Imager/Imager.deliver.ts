@@ -1,5 +1,6 @@
 import { createReadStream, type ReadStream } from "node:fs";
 import { resolve, join } from "node:path";
+import { ApiError } from "../../classes/ApiError.js";
 
 export class ImageDelivery {
     constructor(private readonly directory: string) {}
@@ -7,29 +8,26 @@ export class ImageDelivery {
     read(fileName: string): ReadStream {
         // Chỉ chấp nhận tên file UUID.webp
         const validFileName =
-            /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\.webp$/i; // Định dạng UUID.webp
+            /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\.webp$/i;
 
         if (!validFileName.test(fileName)) {
-            throw new Error("Invalid image filename");
+            throw new ApiError(
+                "INVALID_IMAGE_PATH",
+                "Invalid image filename",
+            );
         }
 
         const rootPath = resolve(this.directory);
-        const filePath = resolve(join(rootPath, fileName)); // resolve đường dẫn tuyệt đối
+        const filePath = resolve(join(rootPath, fileName));
 
         // Bảo đảm file nằm trực tiếp trong thư mục ảnh
         if (resolve(filePath, "..") !== rootPath) {
-            throw new Error("Invalid image path");
+            throw new ApiError(
+                "INVALID_IMAGE_PATH",
+                "Invalid image path",
+            );
         }
+
         return createReadStream(filePath);
     }
 }
-
-/*
-Lỗi xảy ra ở đâu?	                             Kết quả xử lý
-Method không phải GET	                             405
-URL sai định dạng	                                 400
-File không tồn tại, chưa gửi header	                 404
-Lỗi đọc file trước khi gửi header	       Thường là 500
-Lỗi sau khi đã gửi 200	                   Không thể đổi status; kết thúc hoặc hủy response
-Client ngắt kết nối	                       Dừng stream, giải phóng slot và không nhất thiết xem là lỗi server
-*/

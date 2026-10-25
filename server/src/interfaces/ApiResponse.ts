@@ -1,0 +1,104 @@
+export const ApiErrorCode = {
+    UNEXPECTED_TASK_ERROR: "UNEXPECTED_TASK_ERROR",
+    BAD_REQUEST: "BAD_REQUEST",
+    INVALID_JSON: "INVALID_JSON",
+    INVALID_BODY: "INVALID_BODY",
+    MISSING_FIELD: "MISSING_FIELD",
+    VALIDATION_FAILED: "VALIDATION_FAILED",
+
+    ROUTE_NOT_FOUND: "ROUTE_NOT_FOUND",
+    PRODUCT_ALREADY_EXISTS: "PRODUCT_ALREADY_EXISTS",
+    PRODUCT_NOT_FOUND: "PRODUCT_NOT_FOUND",
+
+    INVALID_IMAGE: "INVALID_IMAGE",
+    IMAGE_TOO_LARGE: "IMAGE_TOO_LARGE",
+    IMAGE_NOT_FOUND: "IMAGE_NOT_FOUND",
+    IMAGE_PROCESSING_FAILED: "IMAGE_PROCESSING_FAILED",
+    IMAGE_STORAGE_FAILED: "IMAGE_STORAGE_FAILED",
+
+    QUEUE_FULL: "QUEUE_FULL",
+    REQUEST_TIMEOUT: "REQUEST_TIMEOUT",
+    SERVICE_UNAVAILABLE: "SERVICE_UNAVAILABLE",
+
+    UPSTREAM_ERROR: "UPSTREAM_ERROR",
+    UPSTREAM_TIMEOUT: "UPSTREAM_TIMEOUT",
+    UPSTREAM_INVALID_RESPONSE: "UPSTREAM_INVALID_RESPONSE",
+    INVALID_CONCURRENCY_LIMIT: "INVALID_CONCURRENCY_LIMIT",
+    INTERNAL_SERVER_ERROR: "INTERNAL_SERVER_ERROR",
+    METHOD_NOT_ALLOWED: "METHOD_NOT_ALLOWED",
+
+    IMAGE_DELIVERY_FAILED: "IMAGE_DELIVERY_FAILED",
+    INVALID_IMAGE_PATH: "INVALID_IMAGE_PATH",
+    NOT_IMPLEMENTED: "NOT_IMPLEMENTED"
+} as const;
+
+export type ApiErrorCode =
+    typeof ApiErrorCode[keyof typeof ApiErrorCode];
+
+export const ErrorStatusMap: Record<ApiErrorCode, number> = {
+    // Request errors
+    BAD_REQUEST: 400,
+    INVALID_JSON: 400,
+    INVALID_BODY: 400,
+    MISSING_FIELD: 400,
+    VALIDATION_FAILED: 422,
+
+    // Resource errors
+    ROUTE_NOT_FOUND: 404,
+    PRODUCT_NOT_FOUND: 404,
+    PRODUCT_ALREADY_EXISTS: 409,
+
+    // Image errors
+    INVALID_IMAGE: 415,
+    IMAGE_TOO_LARGE: 413,
+    IMAGE_NOT_FOUND: 404,
+    IMAGE_PROCESSING_FAILED: 500,
+    IMAGE_STORAGE_FAILED: 500,
+
+    // Scheduler errors
+    QUEUE_FULL: 503,
+    UNEXPECTED_TASK_ERROR: 500,
+
+    // Timeout and service errors
+    REQUEST_TIMEOUT: 408,
+    SERVICE_UNAVAILABLE: 503,
+
+    // External API errors
+    UPSTREAM_ERROR: 502,
+    UPSTREAM_TIMEOUT: 504,
+    UPSTREAM_INVALID_RESPONSE: 502,
+    METHOD_NOT_ALLOWED: 405,
+    NOT_IMPLEMENTED: 405,
+
+    // Fallback error
+    INTERNAL_SERVER_ERROR: 500,
+
+    // Limitter
+    INVALID_CONCURRENCY_LIMIT: 500,
+
+    // Imager
+    IMAGE_DELIVERY_FAILED: 500,
+    INVALID_IMAGE_PATH: 400,
+    
+};
+
+export interface ApiError {
+    status: "error";
+    message: string;
+    error: {
+        code: string;
+        details?: unknown;
+    };
+    meta: {
+        timestamp: string;
+    };
+}
+
+export interface ApiSuccess<T> {
+    status: "success";
+    message: string;
+    data: T;
+    meta: {
+        timestamp: string;
+    };
+}

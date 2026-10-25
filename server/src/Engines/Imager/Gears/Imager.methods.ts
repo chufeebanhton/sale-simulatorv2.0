@@ -1,75 +1,139 @@
-import { writeFile, mkdir, unlink, rename } from "node:fs/promises";
+import {
+    writeFile,
+    mkdir,
+    unlink,
+    rename,
+} from "node:fs/promises";
+
 import { randomUUID } from "node:crypto";
 import { join, resolve, basename } from "node:path";
 
-export class ImageMethods {
+import { ApiError } from "../../../classes/ApiError.js";
 
-    async delete(directory: string, fileName: string): Promise<void> {
-        // Chỉ chấp nhận tên file do hệ thống tạo
-        if (!/^[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}\.png$/i.test(fileName)) {
-            throw new Error("Invalid image filename");
+export class ImageMethods {
+    private isValidFileName(fileName: string): boolean {
+        return /^[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}\.webp$/i.test(fileName);
+    }
+
+    async delete(
+        directory: string,
+        fileName: string,
+    ): Promise<void> {
+        if (!this.isValidFileName(fileName)) {
+            throw new ApiError(
+                "INVALID_IMAGE_PATH",
+                "Invalid image filename",
+            );
         }
 
-        const filePath = resolve(directory, fileName);
+        const rootPath = resolve(directory);
+        const filePath = resolve(rootPath, fileName);
 
-        // Bảo đảm đường dẫn cuối cùng nằm trực tiếp trong thư mục ảnh
-        if (basename(filePath) !== fileName || resolve(directory) !== resolve(filePath, "..")) {
-            throw new Error("Invalid image path");
+        if (
+            basename(filePath) !== fileName ||
+            resolve(filePath, "..") !== rootPath
+        ) {
+            throw new ApiError(
+                "INVALID_IMAGE_PATH",
+                "Invalid image path",
+            );
         }
 
         try {
             await unlink(filePath);
-        } catch (error) {
+        } catch (error: unknown) {
             if (
-                error instanceof Error &&
+                typeof error === "object" &&
+                error !== null &&
                 "code" in error &&
                 error.code === "ENOENT"
             ) {
-                // File không tồn tại: không thể xóa
-                throw new Error(`Image not found: ${fileName}`);
+                throw new ApiError(
+                    "IMAGE_NOT_FOUND",
+                    "Image not found",
+                    { fileName },
+                );
             }
 
-            // EACCES, EPERM, EISDIR... được truyền lên caller
-            throw error;
+            throw new ApiError(
+                "IMAGE_STORAGE_FAILED",
+                "Failed to delete image",
+            );
         }
     }
 
-    async save(buffer: Buffer, directory: string): Promise<string> {
+    async save(
+        buffer: Buffer,
+        directory: string,
+    ): Promise<string> {
         if (!Buffer.isBuffer(buffer) || buffer.length === 0) {
-            throw new Error("Image buffer must not be empty");
+            throw new ApiError(
+                "INVALID_IMAGE",
+                "Image buffer must not be empty",
+            );
         }
 
-        await mkdir(directory, { recursive: true });
-
+        const rootPath = resolve(directory);
         const fileName = `${randomUUID()}.webp`;
-        const filePath = join(directory, fileName);
+        const filePath = join(rootPath, fileName);
 
-        // "wx": tạo file mới, không ghi đè file đã tồn tại
-        await writeFile(filePath, buffer, { flag: "wx" });
-
-        return fileName;
-        
+        try {
+            await mkdir(rootPath, { recursive: true });
+            await writeFile(filePath, buffer, { flag: "wx" });
+            return fileName;
+        } catch {
+            throw new ApiError(
+                "IMAGE_STORAGE_FAILED",
+                "Failed to save image",
+            );
+        }
     }
 
-    async update(buffer: Buffer, imgPath: string): Promise<string> {
-        const tempPath = `${imgPath}.webp`;
+    async update(
+        buffer: Buffer,
+        imgPath: string,
+    ): Promise<string> {
+        if (!Buffer.isBuffer(buffer) || buffer.length === 0) {
+            throw new ApiError(
+                "INVALID_IMAGE",
+                "Image buffer must not be empty",
+            );
+        }
+
+        const tempPath = `${imgPath}.${randomUUID()}.tmp`;
+
         try {
-            await unlink(imgPath);
-        } catch (error) {
+            // Ghi ảnh mới vào file tạm trước.
+            await writeFile(tempPath, buffer, { flag: "wx" });
+
+            // Thay thế ảnh cũ sau khi ghi file tạm thành công.
+            await rename(tempPath, imgPath);
+
+            return imgPath;
+        } catch (error: unknown) {
+            // Dọn file tạm nếu thao tác thất bại.
+            try {
+                await unlink(tempPath);
+            } catch {
+                // File tạm có thể chưa được tạo.
+            }
+
             if (
-                error instanceof Error &&
+                typeof error === "object" &&
+                error !== null &&
                 "code" in error &&
                 error.code === "ENOENT"
             ) {
-                // File không tồn tại: không thể xóa
-                throw new Error(`Image not found: ${imgPath}`);
+                throw new ApiError(
+                    "IMAGE_NOT_FOUND",
+                    "Image path or parent directory not found",
+                );
             }
 
-            // EACCES, EPERM, EISDIR... được truyền lên caller
-            throw error;
+            throw new ApiError(
+                "IMAGE_STORAGE_FAILED",
+                "Failed to update image",
+            );
         }
-        await writeFile(tempPath, buffer);
-        await rename(tempPath, imgPath);
-        return imgPath;
     }
 }

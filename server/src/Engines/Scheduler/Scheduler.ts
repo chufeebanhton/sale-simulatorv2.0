@@ -1,5 +1,7 @@
+
 import { CircleQueue } from "../../classes/CircleQueue.class.js";
 import { ConcurrencyLimiter } from "./ConcurrencyLimiter.scheduler.js";
+import { ApiError } from "../../classes/ApiError.js";
 
 interface QueueTask {
     execute: () => Promise<void>;
@@ -33,10 +35,11 @@ export class Scheduler {
 
     private runTask(
         task: QueueTask,
-        release: () => void
+        release: () => void,
     ): void {
-        task.execute()
+        void task.execute()
             .catch((error: unknown) => {
+                // Lỗi bất ngờ bên trong execute.
                 console.error("Unexpected task error:", error);
             })
             .finally(() => {
@@ -50,24 +53,28 @@ export class Scheduler {
             const task: QueueTask = {
                 execute: async () => {
                     try {
-                        const result = await job();
-                        resolve(result);
+                        resolve(await job());
                     } catch (error: unknown) {
                         reject(error);
                     }
                 },
             };
 
-            // Nếu queue đã có task chờ, giữ thứ tự FIFO.
+            // Giữ thứ tự FIFO nếu đã có task chờ.
             if (!this.queue.isEmpty()) {
                 if (!this.queue.enqueue(task)) {
-                    reject(new Error("Queue is full"));
+                    reject(
+                        new ApiError(
+                            "QUEUE_FULL",
+                            "Request queue is full",
+                        ),
+                    );
                 }
 
                 return;
             }
 
-            // Queue rỗng: thử lấy slot chạy ngay.
+            // Thử chạy ngay nếu còn slot.
             const release = this.limiter.tryAcquire();
 
             if (release) {
@@ -75,9 +82,14 @@ export class Scheduler {
                 return;
             }
 
-            // Hết slot: đưa task vào queue.
+            // Hết slot thì đưa vào queue.
             if (!this.queue.enqueue(task)) {
-                reject(new Error("Queue is full"));
+                reject(
+                    new ApiError(
+                        "QUEUE_FULL",
+                        "Request queue is full",
+                    ),
+                );
             }
         });
     }
