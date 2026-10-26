@@ -7,7 +7,7 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npm run build && node --test dist/Engines/Imager/test/Imager.test.js dist/test/*.test.js",
     "dev": "npx tsx watch src/main.ts",
     "typecheck": "tsc --noEmit",
     "build": "tsc",

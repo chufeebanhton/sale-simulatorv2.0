@@ -1,4 +1,5 @@
 import { Product } from "../../interfaces/Product.types.js";
+import { ApiError } from "../../classes/ApiError.js";
 
 export class ProductCache {
     private cache = new Map<string, Product>();
@@ -37,11 +38,17 @@ export class ProductCache {
         const start = limit * (page - 1);
         const end = start + limit;
         if (page < 1 || limit < 0 ) {
-            throw new Error('Invalid input CACHE REQUEST')
+            throw new ApiError(
+                'INVALID_INPUT_CACHE_REQUEST', 
+                'INVALID INPUT CACHE REQUEST'
+            )
         } else {
             limit > this.length ? limit = this.length : limit;
             const result = [...this.cache.values()];
-            if (!result) throw new Error('CACHE REQUEST ERROR!');
+            if (!result) throw new ApiError(
+                'CACHE_REQUEST_ERROR',
+                'CACHE REQUEST ERROR'
+            );
             return result.slice(start, end);
         }
     }
@@ -49,7 +56,10 @@ export class ProductCache {
             this.set(data);
             const key = `${data._id}:${data.name}`;
             const result = this.cache.get(key)
-            if (!result) throw new Error('Set Value Cache Error');
+            if (!result) throw new ApiError(
+                'SET_VALUE_CACHE_ERROR',
+                'SET_VALUE_CACHE_ERROR'
+            );
             this.length++;
             return result;
     }

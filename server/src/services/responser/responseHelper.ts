@@ -52,11 +52,10 @@ export function sendError(
     const apiError =
         error instanceof ApiError ? error : null;
 
-
     const statusCode = apiError?.code
         ? ErrorStatusMap[apiError.code] ?? 500
         : 500;
-    console.log(statusCode);
+    console.log(statusCode)
     const body: ErrorResponse = {
         status: "error",
         message: apiError?.message
