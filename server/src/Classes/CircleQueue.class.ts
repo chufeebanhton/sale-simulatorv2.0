@@ -45,4 +45,8 @@ export class CircleQueue<T> {
     isEmpty(): boolean {
         return this.count === 0;
     }
+
+    isFull(): boolean {
+        return this.count >= this.capacity;
+    }
 }

@@ -7,9 +7,38 @@ import { sendSuccess, sendError } from "../services/responser/responseHelper.js"
 import { ApiError } from "../classes/ApiError.js";
 
 const scheduler = new Scheduler(100, 1000);
-const productCache = new ProductCache(
-    await scheduler.submit<Product[]>(() => GET())
-);
+// const productCache = new ProductCache(
+//     await scheduler.submit<Product[]>(() => GET())
+// );
+
+const productCache = new ProductCache([] as Product[]);
+
+let initialized = false;
+
+let loadingPromise: Promise<Product[]> | null = null;
+
+export async function loadProducts(): Promise<Product[]> {
+    if (initialized) {
+        // Cache already has products.
+        // The actual return path should use your cache API.
+        return productCache.getAll();
+    }
+
+    if (!loadingPromise) {
+        loadingPromise = scheduler
+            .submit<Product[]>(() => GET())
+            .then((products) => {
+                productCache.callBack(products);
+                initialized = true;
+                return products;
+            })
+            .finally(() => {
+                loadingPromise = null;
+            });
+    }
+
+    return loadingPromise;
+}
 
 export async function product_router(
     req: IncomingMessage,
@@ -34,14 +63,12 @@ export async function product_router(
                 throw new ApiError("VALIDATION_FAILED", "limit must be a positive integer");
             }
 
-            if (!productCache.isExist()) {
-                const products = await scheduler.submit<Product[]>(() => GET());
-                // go to Storage
-                productCache.callBack(products);
-            }
+            await loadProducts();
 
-            const data = await productCache.get(page, limit);
+            const data = await productCache.getLimit(page, limit);
+
             sendSuccess(res, 200, "Products retrieved successfully", data);
+
             return;
         }
 
@@ -54,6 +81,7 @@ export async function product_router(
         }
 
         if (req.method === "PATCH" && pathname === "/api/v2.0.0/products") {
+
             return;
         }
 

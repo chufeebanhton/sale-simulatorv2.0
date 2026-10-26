@@ -50,6 +50,13 @@ export class Scheduler {
 
     submit<T>(job: () => Promise<T>): Promise<T> {
         return new Promise<T>((resolve, reject) => {
+            if (this.queue.isFull()) {
+                throw new ApiError(
+                    "SERVICE_UNAVAILABLE",
+                    "SERVICE_UNAVAILABLE: Request queue is full"
+                )
+            }
+
             const task: QueueTask = {
                 execute: async () => {
                     try {
@@ -62,15 +69,7 @@ export class Scheduler {
 
             // Giữ thứ tự FIFO nếu đã có task chờ.
             if (!this.queue.isEmpty()) {
-                if (!this.queue.enqueue(task)) {
-                    reject(
-                        new ApiError(
-                            "QUEUE_FULL",
-                            "Request queue is full",
-                        ),
-                    );
-                }
-
+                this.queue.enqueue(task)
                 return;
             }
 
