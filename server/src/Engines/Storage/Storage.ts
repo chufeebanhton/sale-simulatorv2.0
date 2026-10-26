@@ -4,8 +4,6 @@ import { ApiError } from "../../classes/ApiError.js";
 export class ProductCache {
     private cache = new Map<string, Product>() ?? null;
     private length: number = 0;
-    public initialized = false;
-    private exis: boolean = false
     constructor(data: Product[]) {
         this.callBack(data);    
     };
@@ -14,10 +12,6 @@ export class ProductCache {
         const key = `${data._id}:${data.name}`;
         this.cache.set(key, data);
     }
-
-    isExist(): Boolean {
-        return this.exis;
-    };
 
     size(): number {
         return this.cache.size;
@@ -30,10 +24,7 @@ export class ProductCache {
                 key,
                 item)
         });
-        this.initialized = true;
         this.length = data.length;
-        this.exis = true;
-        
     }
 
     async getAll(): Promise<Product[]> {

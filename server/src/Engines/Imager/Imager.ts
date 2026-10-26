@@ -47,3 +47,7 @@ export async function update(
     const output = await processImage(bufferData);
     return imageStorage.update(output, imgPath);
 }
+
+export async function remove(__filename: string, path: string): Promise<void> {
+    await imageStorage.delete(__filename, path);
+}

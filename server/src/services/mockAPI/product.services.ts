@@ -2,7 +2,7 @@ import type { IncomingMessage } from "node:http";
 import type { Product } from "../../interfaces/Product.types.js";
 
 import { httpRequest } from "./product.httpRequest.js";
-import { saveImage } from "../../Engines/Imager/Imager.js";
+import { saveImage, remove } from "../../Engines/Imager/Imager.js";
 import { randomUUID } from "node:crypto";
 import { getBody } from "../../services/untils/getBody.js";
 import { ApiError } from "../../classes/ApiError.js";
@@ -90,6 +90,7 @@ export async function POST(req: IncomingMessage): Promise<Product> {
     const price = requiredNumber(data, "price");
     const compareAtPrice = requiredNumber(data, "compareAtPrice");
     const stockQuantity = requiredNumber(data, "stockQuantity");
+
     if (price <= 0) {
         throw new ApiError(
             "VALIDATION_FAILED",
@@ -149,6 +150,7 @@ export async function POST(req: IncomingMessage): Promise<Product> {
     } catch {
         // The image has already been saved locally.
         // Add image cleanup here if the MockAPI request fails.
+        remove(PRODUCT_IMG_PATH, product.imageUrl);
         throw new ApiError(
             "UPSTREAM_ERROR",
             "Failed to create product in the upstream API",
