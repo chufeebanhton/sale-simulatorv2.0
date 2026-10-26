@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { ApiError } from "../classes/ApiError.js";
+import { ApiError } from "../Classes/ApiError.js";
 import {
     HttpRequestError,
     httpRequest,

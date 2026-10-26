@@ -5,7 +5,7 @@ import { join } from "node:path";
 import test from "node:test";
 import sharp from "sharp";
 
-import { ApiError } from "../classes/ApiError.js";
+import { ApiError } from "../Classes/ApiError.js";
 import { ConcurrencyLimiter } from "../Engines/Scheduler/ConcurrencyLimiter.scheduler.js";
 import { ImageDelivery } from "../Engines/Imager/Imager.deliver.js";
 import { ImageProcessor } from "../Engines/Imager/Gears/Imager.processor.js";

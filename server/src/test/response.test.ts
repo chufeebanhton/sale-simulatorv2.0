@@ -3,7 +3,7 @@ import { createServer } from "node:http";
 import { once } from "node:events";
 import test from "node:test";
 
-import { ApiError } from "../classes/ApiError.js";
+import { ApiError } from "../Classes/ApiError.js";
 import { sendError as sendApiError } from "../services/responser/responseHelper.js";
 import { sendError as sendSharedError } from "../services/untils/ErrorHelper.js";
 import { sendSuccess } from "../services/responser/responseHelper.js";

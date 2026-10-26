@@ -1,7 +1,7 @@
 
 import type { IncomingMessage } from "node:http";
 import { Readable } from "node:stream";
-import { ApiError } from "../../classes/ApiError.js";
+import { ApiError } from "../../Classes/ApiError.js";
 
 const MAX_BODY_SIZE = 6 * 1024 * 1024; // 6 MB
 

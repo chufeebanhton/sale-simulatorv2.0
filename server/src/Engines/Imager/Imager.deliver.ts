@@ -1,6 +1,6 @@
 import { createReadStream, type ReadStream } from "node:fs";
 import { resolve, join } from "node:path";
-import { ApiError } from "../../classes/ApiError.js";
+import { ApiError } from "../../Classes/ApiError.js";
 
 export class ImageDelivery {
     constructor(private readonly directory: string) {}

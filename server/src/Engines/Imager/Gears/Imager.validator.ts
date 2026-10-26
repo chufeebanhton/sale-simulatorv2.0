@@ -1,5 +1,5 @@
 import type { Metadata } from "sharp";
-import { ApiError } from "../../../classes/ApiError.js";
+import { ApiError } from "../../../Classes/ApiError.js";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 const MAX_WIDTH = 8000;

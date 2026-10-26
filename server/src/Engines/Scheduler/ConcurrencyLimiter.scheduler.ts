@@ -1,4 +1,4 @@
-import { ApiError } from "../../classes/ApiError.js";
+import { ApiError } from "../../Classes/ApiError.js";
 
 export class ConcurrencyLimiter {
     private activeCount = 0;

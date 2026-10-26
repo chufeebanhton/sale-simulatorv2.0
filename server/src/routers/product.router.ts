@@ -4,7 +4,7 @@ import { DELETE, GET, PATCH, POST } from "../services/mockAPI/product.services.j
 import type { Product } from "../interfaces/Product.types.js";
 import { ProductCache } from "../Engines/Storage/Storage.js";
 import { sendSuccess, sendError } from "../services/responser/responseHelper.js";
-import { ApiError } from "../classes/ApiError.js";
+import { ApiError } from "../Classes/ApiError.js";
 
 const scheduler = new Scheduler(100, 1000);
 const productCache = new ProductCache([]);

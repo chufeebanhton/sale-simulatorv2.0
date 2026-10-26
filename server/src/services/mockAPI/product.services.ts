@@ -5,7 +5,7 @@ import { httpRequest } from "./product.httpRequest.js";
 import { saveImage, removeImage, updateImage } from "../../Engines/Imager/Imager.js";
 import { randomUUID } from "node:crypto";
 import { getBody } from "../../services/untils/getBody.js";
-import { ApiError } from "../../classes/ApiError.js";
+import { ApiError } from "../../Classes/ApiError.js";
 
 const MOCK_API_URL =
     "https://6abe5659c4d5ac548302681c.mockapi.io/api/v1/products/";

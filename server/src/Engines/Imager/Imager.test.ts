@@ -6,7 +6,7 @@ import test from "node:test";
 import sharp from "sharp";
 
 import { removeImage, updateImage, saveImage } from "./Imager.js";
-import { ApiError } from "../../classes/ApiError.js";
+import { ApiError } from "../../Classes/ApiError.js";
 
 const sizeNeed = { w: 800, h: 800 };
 

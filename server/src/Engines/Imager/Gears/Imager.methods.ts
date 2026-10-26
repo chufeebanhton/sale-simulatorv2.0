@@ -8,7 +8,7 @@ import {
 import { randomUUID } from "node:crypto";
 import { join, resolve, basename } from "node:path";
 
-import { ApiError } from "../../../classes/ApiError.js";
+import { ApiError } from "../../../Classes/ApiError.js";
 
 export class ImageMethods {
     private isValidFileName(fileName: string): boolean {

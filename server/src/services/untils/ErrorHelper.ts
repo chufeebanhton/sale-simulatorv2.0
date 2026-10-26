@@ -1,6 +1,6 @@
 
 import type { ServerResponse } from "node:http";
-import { ApiError } from "../../classes/ApiError.js";
+import { ApiError } from "../../Classes/ApiError.js";
 import type { ApiErrorCode } from "../../interfaces/ApiResponse.js";
 
 interface ErrorResponse {

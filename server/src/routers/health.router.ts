@@ -1,7 +1,7 @@
 
 import type { IncomingMessage, ServerResponse } from "node:http";
 import { sendSuccess } from "../services/responser/responseHelper.js";
-import { ApiError } from "../classes/ApiError.js";
+import { ApiError } from "../Classes/ApiError.js";
 
 export function healthRoute(
     req: IncomingMessage,

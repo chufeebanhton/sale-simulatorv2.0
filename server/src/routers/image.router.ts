@@ -4,7 +4,7 @@ import { pipeline } from "node:stream/promises";
 
 import { ImageDelivery } from "../Engines/Imager/Imager.deliver.js";
 import { Scheduler } from "../Engines/Scheduler/Scheduler.js";
-import { ApiError } from "../classes/ApiError.js";
+import { ApiError } from "../Classes/ApiError.js";
 import { sendError } from "../services/responser/responseHelper.js";
 
 const delivery = new ImageDelivery("./uploads/images/products/indexs");

@@ -1,6 +1,6 @@
 import sharp, { type Metadata } from "sharp";
 import { BufferData } from "../Imager.js";
-import { ApiError } from "../../../classes/ApiError.js";
+import { ApiError } from "../../../Classes/ApiError.js";
 
 export class ImageProcessor {
     constructor(private readonly data: BufferData) {

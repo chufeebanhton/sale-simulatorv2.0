@@ -1,7 +1,6 @@
-
-import { CircleQueue } from "../../classes/CircleQueue.class.js";
+import { CircleQueue } from "../../Classes/CircleQueue.class.js";
 import { ConcurrencyLimiter } from "./ConcurrencyLimiter.scheduler.js";
-import { ApiError } from "../../classes/ApiError.js";
+import { ApiError } from "../../Classes/ApiError.js";
 
 interface QueueTask {
     execute: () => Promise<void>;

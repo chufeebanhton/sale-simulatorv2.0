@@ -1,5 +1,5 @@
 import type { Product, ProductPatch } from "../../interfaces/Product.types.js";
-import { ApiError } from "../../classes/ApiError.js";
+import { ApiError } from "../../Classes/ApiError.js";
 
 export class ProductCache {
     private cache = new Map<string, Product>();

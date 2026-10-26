@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { CircleQueue } from "../classes/CircleQueue.class.js";
+import { CircleQueue } from "../Classes/CircleQueue.class.js";
 
 test("circle queue reports state and handles empty/full boundaries", () => {
     const queue = new CircleQueue<number>(2);

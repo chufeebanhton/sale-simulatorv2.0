@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import { ProductCache } from "../Engines/Storage/Storage.js";
-import { ApiError } from "../classes/ApiError.js";
+import { ApiError } from "../Classes/ApiError.js";
 import type { Product } from "../interfaces/Product.types.js";
 
 function product(id: string, name: string): Product {

@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import { Scheduler } from "../Engines/Scheduler/Scheduler.js";
-import { ApiError } from "../classes/ApiError.js";
+import { ApiError } from "../Classes/ApiError.js";
 
 function deferred<T = void>(): {
     promise: Promise<T>;

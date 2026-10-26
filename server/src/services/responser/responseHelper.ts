@@ -2,7 +2,7 @@
 import type { ServerResponse } from "node:http";
 import type { ApiErrorCode, ApiSuccess } from "../../interfaces/ApiResponse.js";
 import {ErrorStatusMap} from "../../interfaces/ApiResponse.js";
-import { ApiError } from "../../classes/ApiError.js"
+import { ApiError } from "../../Classes/ApiError.js"
 
 export function sendSuccess<T>(
     res: ServerResponse,
