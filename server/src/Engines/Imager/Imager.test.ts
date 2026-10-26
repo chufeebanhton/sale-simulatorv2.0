@@ -5,7 +5,7 @@ import { join } from "node:path";
 import test from "node:test";
 import sharp from "sharp";
 
-import { update, saveImage } from "./Imager.js";
+import { removeImage, updateImage, saveImage } from "./Imager.js";
 import { ApiError } from "../../classes/ApiError.js";
 
 const sizeNeed = { w: 800, h: 800 };
@@ -57,6 +57,22 @@ test("saveImage rejects an invalid image without saving a file", async (t) => {
     assert.deepEqual(await readdir(directory), []);
 });
 
+test("removeImage deletes a previously saved image", async (t) => {
+    const directory = await mkdtemp(join(tmpdir(), "imager-remove-"));
+    t.after(() => rm(directory, { recursive: true, force: true }));
+
+    const fileName = await saveImage(
+        { buffer: await createValidImage(), sizeNeed },
+        directory,
+    );
+
+    await removeImage(fileName, directory);
+    await assert.rejects(
+        readFile(join(directory, fileName)),
+        (error: NodeJS.ErrnoException) => error.code === "ENOENT",
+    );
+});
+
 test("update replaces an existing image with processed WebP data", async (t) => {
     const directory = await mkdtemp(join(tmpdir(), "imager-update-"));
     t.after(() => rm(directory, { recursive: true, force: true }));
@@ -64,7 +80,7 @@ test("update replaces an existing image with processed WebP data", async (t) => 
     const imagePath = join(directory, "product.webp");
     await writeFile(imagePath, Buffer.from("old image"));
 
-    const resultPath = await update(
+    const resultPath = await updateImage(
         { buffer: await createValidImage(), sizeNeed },
         imagePath,
     );
@@ -81,7 +97,7 @@ test("update reports a missing destination directory", async (t) => {
     t.after(() => rm(directory, { recursive: true, force: true }));
 
     await assert.rejects(
-        update(
+        updateImage(
             { buffer: await createValidImage(), sizeNeed },
             join(directory, "missing", "product.webp"),
         ),

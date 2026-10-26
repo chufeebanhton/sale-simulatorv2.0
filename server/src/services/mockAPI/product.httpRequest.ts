@@ -32,7 +32,6 @@ export async function httpRequest<T, B = unknown>(
             ? { body: JSON.stringify(body) }
             : {}),
     });
-
     if (!response.ok) {
         let errorData: ApiErrorResponse | null = null;
 
@@ -54,6 +53,5 @@ export async function httpRequest<T, B = unknown>(
     if (response.status === 204) {
         return undefined as T;
     }
-
     return await response.json() as T;
 }

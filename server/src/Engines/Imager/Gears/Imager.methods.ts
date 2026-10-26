@@ -108,7 +108,6 @@ export class ImageMethods {
 
             // Thay thế ảnh cũ sau khi ghi file tạm thành công.
             await rename(tempPath, imgPath);
-
             return imgPath;
         } catch (error: unknown) {
             // Dọn file tạm nếu thao tác thất bại.

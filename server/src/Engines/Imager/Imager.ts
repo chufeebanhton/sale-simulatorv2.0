@@ -40,7 +40,7 @@ export async function saveImage(
     return imageStorage.save(output, path);
 }
 
-export async function update(
+export async function updateImage(
     bufferData: BufferData,
     imgPath: string,
 ): Promise<string> {
@@ -48,6 +48,9 @@ export async function update(
     return imageStorage.update(output, imgPath);
 }
 
-export async function remove(__filename: string, path: string): Promise<void> {
-    await imageStorage.delete(__filename, path);
+export async function removeImage(
+    fileName: string,
+    directory: string,
+): Promise<void> {
+    await imageStorage.delete(directory, fileName);
 }
