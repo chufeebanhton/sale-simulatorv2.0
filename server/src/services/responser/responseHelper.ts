@@ -4,6 +4,12 @@ import type { ApiErrorCode, ApiSuccess } from "../../interfaces/ApiResponse.js";
 import {ErrorStatusMap} from "../../interfaces/ApiResponse.js";
 import { ApiError } from "../../Classes/ApiError.js"
 
+function applyCorsHeaders(res: ServerResponse): void {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+}
+
 export function sendSuccess<T>(
     res: ServerResponse,
     statusCode: number,
@@ -18,6 +24,8 @@ export function sendSuccess<T>(
             timestamp: new Date().toISOString(),
         },
     };
+
+    applyCorsHeaders(res);
 
     res.writeHead(statusCode, {
         "Content-Type": "application/json; charset=utf-8",
@@ -71,6 +79,8 @@ export function sendError(
             timestamp: new Date().toISOString(),
         },
     };
+
+    applyCorsHeaders(res);
 
     res.writeHead(statusCode, {
         "Content-Type": "application/json; charset=utf-8",

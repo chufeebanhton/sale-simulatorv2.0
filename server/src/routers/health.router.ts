@@ -7,6 +7,16 @@ export function healthRoute(
     req: IncomingMessage,
     res: ServerResponse,
 ): void {
+    if (req.method === "OPTIONS") {
+        res.writeHead(204, {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type, Authorization",
+        });
+        res.end();
+        return;
+    }
+
     const url = new URL(
         req.url ?? "/",
         `http://${req.headers.host ?? "localhost"}`,

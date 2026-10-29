@@ -29,6 +29,16 @@ export async function imageRouter(
     res: ServerResponse,
 ): Promise<void> {
     try {
+        if (req.method === "OPTIONS") {
+            res.writeHead(204, {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "GET, OPTIONS",
+                "Access-Control-Allow-Headers": "Content-Type, Authorization",
+            });
+            res.end();
+            return;
+        }
+
         if (req.method !== "GET") {
             res.setHeader("Allow", "GET");
 

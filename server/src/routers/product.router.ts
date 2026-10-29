@@ -46,6 +46,17 @@ export async function product_router(
     );
     const pathname = url.pathname;
 
+    if (req.method === "OPTIONS") {
+        res.writeHead(204, {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, POST, PATCH, DELETE, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type, Authorization",
+            "Access-Control-Max-Age": "86400",
+        });
+        res.end();
+        return;
+    }
+
     try {
         if (req.method === "GET" && pathname === "/api/v2.0.0/products") {
             const page = Number(url.searchParams.get("page") ?? 1);

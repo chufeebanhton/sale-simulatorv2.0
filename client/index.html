@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sale Simulator Products</title>
+    <link rel="stylesheet" href="./src/styles/products.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <h1 class="heading">Products</h1>
+        <h3><a href="./admin.html">admin</a></h3>
+      </header>
+
+      <div class="toolbar">
+        <div class="field custom-select-field">
+          <label for="categoryFilter">Category</label>
+          <div id="categoryFilterContainer" class="custom-select" aria-label="Filter products by category">
+            <button
+              id="categoryFilter"
+              type="button"
+              class="select-trigger"
+              aria-haspopup="listbox"
+              aria-expanded="false"
+              aria-controls="categoryFilterMenu"
+            >
+              <span class="select-value">All categories</span>
+              <span class="select-arrow" aria-hidden="true">▾</span>
+            </button>
+            <div id="categoryFilterMenu" class="select-menu" role="listbox" aria-label="Category options"></div>
+          </div>
+        </div>
+
+        <button id="sortButton" type="button" aria-label="Sort products by price">
+          Sort: Price ↑
+        </button>
+      </div>
+
+      <div id="status" class="status" aria-live="polite"></div>
+      <main id="productGrid" class="grid"></main>
+    </div>
+
+    <script type="module" src="./dist/pages/index/page.js"></script>
+  </body>
+</html>

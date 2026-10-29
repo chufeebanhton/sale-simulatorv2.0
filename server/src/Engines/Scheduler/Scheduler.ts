@@ -22,7 +22,9 @@ export class Scheduler {
             if (!release) return;
 
             const task = this.queue.dequeue();
-
+            console.log("Limiter: ", this.limiter.getActiveCount())
+            console.log("Queue:", this.queue.size());
+            
             if (!task) {
                 release();
                 return;

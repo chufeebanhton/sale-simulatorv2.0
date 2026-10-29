@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Product Manager</title>
+    <link rel="stylesheet" href="./src/styles/admin.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <aside class="panel form-panel">
+        <div class="panel-header">
+          <h1><a href="./index.html">store</a></h1>
+          <h1>Product Admin</h1>
+        </div>
+
+        <form id="productForm" class="product-form">
+          <input type="hidden" id="selectedProductId" />
+
+          <label>
+            Product name
+            <input id="name" name="name" type="text" required />
+          </label>
+
+          <label>
+            SKU
+            <input id="sku" name="sku" type="text" required />
+          </label>
+
+          <label>
+            Description
+            <textarea id="description" name="description" rows="4" required></textarea>
+          </label>
+
+          <label>
+            Brand
+            <input id="brand" name="brand" type="text" required />
+          </label>
+
+          <label>
+            Categories
+            <div id="categorySelectWrapper" class="custom-category-select" aria-label="Select product categories">
+              <button
+                id="categoriesTrigger"
+                type="button"
+                class="category-trigger"
+                aria-haspopup="listbox"
+                aria-expanded="false"
+                aria-controls="categoriesMenu"
+              >
+                <span class="select-value">Select categories</span>
+                <span class="select-arrow" aria-hidden="true">▾</span>
+              </button>
+              <div id="categoriesMenu" class="category-menu" role="listbox" aria-multiselectable="true">
+                <button type="button" class="category-option" role="option" data-value="lighting" aria-selected="false">Lighting</button>
+                <button type="button" class="category-option" role="option" data-value="decor" aria-selected="false">Decor</button>
+                <button type="button" class="category-option" role="option" data-value="home" aria-selected="false">Home</button>
+                <button type="button" class="category-option" role="option" data-value="office" aria-selected="false">Office</button>
+                <button type="button" class="category-option" role="option" data-value="garden" aria-selected="false">Garden</button>
+                <button type="button" class="category-option" role="option" data-value="sound" aria-selected="false">Sound</button>
+                <button type="button" class="category-option" role="option" data-value="ear_phone" aria-selected="false">Ear phone</button>
+                <button type="button" class="category-option" role="option" data-value="headphone" aria-selected="false">Head phone</button>
+                <button type="button" class="category-option" role="option" data-value="cable" aria-selected="false">Cable</button>
+              
+              </div>
+              <select id="categories" name="categories" multiple hidden aria-label="Selected product categories">
+                <option value="lighting">Lighting</option>
+                <option value="decor">Decor</option>
+                <option value="home">Home</option>
+                <option value="office">Office</option>
+                <option value="garden">Garden</option>
+              </select>
+            </div>
+          </label>
+
+          <div class="row two-col">
+            <label>
+              Price
+              <input id="price" name="price" type="number" min="0" step="0.01" required />
+            </label>
+
+            <label>
+              Compare price
+              <input id="compareAtPrice" name="compareAtPrice" type="number" min="0" step="0.01" required />
+            </label>
+          </div>
+
+          <label>
+            Stock quantity
+            <input id="stockQuantity" name="stockQuantity" type="number" min="0" step="1" required />
+          </label>
+
+          <label>
+            Product image
+            <input id="image" name="image" type="file" accept="image/*" />
+          </label>
+
+          <div class="actions">
+            <button id="submitButton" type="submit">Create product</button>
+            <button id="resetButton" type="button" class="secondary">Reset</button>
+          </div>
+        </form>
+
+        <div id="statusBox" class="status-box" aria-live="polite"></div>
+      </aside>
+
+      <main class="panel list-panel">
+        <div class="panel-header">
+          <h2>All products</h2>
+        </div>
+        <div id="productGrid" class="product-grid"></div>
+      </main>
+    </div>
+
+    <script type="module" src="./dist/pages/admin/page.js"></script>
+  </body>
+</html>
